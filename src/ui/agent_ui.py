@@ -13,11 +13,11 @@ from datetime import datetime
 from docx import Document
 from docx.shared import Pt, RGBColor
 from langchain_core.messages import HumanMessage, AIMessage, ToolMessage
-from document_engine import DocumentAIEngine
+from src.core.document_engine import DocumentAIEngine
 
 # Import communication tools for the push-client
-import communication_tools
-from communication_tools import fetch_unopened_emails, draft_or_send_email, get_credential, run_push_email_client, run_push_telegram_client, telegram_send_or_draft
+import src.tools.communication_tools
+from src.tools.communication_tools import fetch_unopened_emails, draft_or_send_email, get_credential, run_push_email_client, run_push_telegram_client, telegram_send_or_draft
 
 class OllamaChatApp:
     def __init__(self, root):

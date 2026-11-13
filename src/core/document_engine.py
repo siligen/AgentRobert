@@ -15,29 +15,29 @@ from langchain_core.messages import HumanMessage, AIMessage, SystemMessage, Tool
 from langchain_core.tools import tool
 
 # Modular imports for System Tools
-from system_tools import get_pwd, get_system_datetime, list_directory, make_directory, change_directory, copy_file_or_dir, find_files, grep_file
+from src.tools.system_tools import get_pwd, get_system_datetime, list_directory, make_directory, change_directory, copy_file_or_dir, find_files, grep_file
 
 # Modular imports for Git and SSH Tools
-from vcs_network_tools import (
+from src.tools.vcs_network_tools import (
     git_init, git_status, git_clone, git_add, git_commit,
     git_checkout, git_branch, git_log, git_pull, git_push,
     ssh_run_command
 )
 
 # Modular imports for Programming Environment & Automated Debugging Tools
-from code_exec_tools import (
+from src.tools.code_exec_tools import (
     write_code_file, patch_code_file, setup_python_env,
     pip_install, execute_script, execute_python_with_auto_debug
 )
 
 # Modular imports for Code Mapping and Verification Tools
 try:
-    from code_map_tools import CODE_MAP_TOOLS, map_code_tree_sitter, verify_python_ast, verify_python_compile
+    from src.tools.code_map_tools import CODE_MAP_TOOLS, map_code_tree_sitter, verify_python_ast, verify_python_compile
 except ImportError:
     CODE_MAP_TOOLS = []
 
 # Modular imports for email, WhatsApp, and Telegram integrations
-from communication_tools import (
+from src.tools.communication_tools import (
     register_email_credentials,
     fetch_unopened_emails,
     draft_or_send_email,
@@ -47,12 +47,12 @@ from communication_tools import (
 
 # Import the new Skill Manager and RAG Manager
 try:
-    from skill_manager import SkillManager
+    from src.tools.skill_manager import SkillManager
 except ImportError:
     SkillManager = None
 
 try:
-    from rag_manager import RAGManager
+    from src.tools.rag_manager import RAGManager
 except ImportError:
     RAGManager = None
 
