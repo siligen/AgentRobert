@@ -1,30 +1,32 @@
 # Agent Robert
 
-Agent Robert is a local, multi-agent AI workspace built around a Python/Tkinter frontend and an Ollama-backed orchestration engine. It is designed to act as a cognitive operating environment for reading, annotating, searching, generating, and executing code and documents inside an isolated workspace while coordinating specialized sub-agents for different tasks.
+**Agent Robert is an AI multi-agent orchestration system that runs on local large language models (LLMs).** It uses Ollama to serve local models and coordinates specialized AI sub-agents to carry out coding, document, research, and workspace tasks. The application is built around a Python/Tkinter desktop interface and is designed to keep model inference and task work local by default.
 
 ## Overview
 
-The project combines:
+Agent Robert combines:
 
-- a desktop chat-style interface for interacting with local LLM models
-- a master orchestrator that delegates work to specialized sub-agents
-- a sandboxed workspace for file generation and task isolation
-- local document ingestion for common formats
-- code analysis and execution tools for Python and related tasks
-- optional communication integrations for email, Telegram, and WhatsApp
-- Git, SSH, and filesystem operations behind approval gates
+- A master AI orchestrator that plans work and delegates tasks to specialized sub-agents
+- Local LLM inference through Ollama, with model selection in the desktop app
+- A chat-style desktop interface and live visualization of agents and tools
+- An isolated workspace for generated files and task outputs
+- Document reading, creation, and analysis tools
+- Code mapping, verification, execution, and debugging tools
+- Optional email, Telegram, and WhatsApp integrations
+- Git, SSH, and filesystem tools, with approval checks for network-sensitive operations
 
-This repo is primarily implemented in Python and uses local model inference via Ollama rather than a hosted cloud API.
+The project is primarily implemented in Python. Its orchestration engine uses LangChain's Ollama integration; it does not require a hosted LLM API for its core model inference.
 
 ## Main capabilities
 
 - Multi-agent orchestration and task delegation
 - Local workspace/session isolation with `AGENT_WORKSPACE` and `APP_START_DIR`
-- Reading PDFs, Word documents, CSV, markdown, code files, and image metadata
-- Writing generated documents and other files into the sandboxed workspace
-- Code search, mapping, AST verification, and Python execution tools
-- Git status/repository workflows and SSH command execution
-- Skill discovery via `skills/` directories and RAG indexing support
+- Reading PDFs, Word documents, CSV, markdown, code files, presentations, spreadsheets, and image metadata
+- Writing documents and other generated files into the workspace
+- Code mapping and Python AST/compile verification
+- Python and other supported script execution and debugging tools
+- Git workflows and SSH commands subject to network approval
+- Skill discovery from `skills/` directories and retrieval-augmented generation (RAG) indexing
 - Communication credential management and message drafting helpers
 
 ## Repository layout
@@ -51,33 +53,28 @@ This repo is primarily implemented in Python and uses local model inference via 
 ## Technology stack
 
 - Python 3
-- Tkinter for the desktop UI
-- LangChain + LangChain Ollama integration
-- Ollama local model serving
-- Python libraries such as:
-  - `markdown`
-  - `python-docx`
-  - `pypdf`
-  - `tkhtmlview`
-  - `Pillow`
-  - `pandas`
-  - `python-pptx`
+- Tkinter desktop UI
+- Ollama for local model serving
+- LangChain and LangChain Ollama integration
+- Supporting libraries including `markdown`, `python-docx`, `pypdf`, `tkhtmlview`, `Pillow`, `pandas`, and `python-pptx`
 
 ## Getting started
 
 ### Prerequisites
 
-- Python 3.10+
+- Python 3.10 or later
 - Ollama installed and running locally
-- An available local model such as `gemma4:31b` or another compatible model
+- A model available in Ollama that supports tool calling; the application defaults to `gemma4:31b`
 
 ### Install dependencies
+
+Install the Python packages used by the application and its optional document features:
 
 ```bash
 pip install markdown tkhtmlview python-docx pypdf langchain langchain-ollama pillow pandas python-pptx
 ```
 
-If needed, pull a model into Ollama:
+Install and start Ollama using its platform-specific instructions. Then pull a model if it is not already available:
 
 ```bash
 ollama pull gemma4:31b
@@ -85,13 +82,7 @@ ollama pull gemma4:31b
 
 ### Run the application
 
-From the repository root:
-
-```bash
-python src/ui/agent_ui.py
-```
-
-or:
+From the repository root, launch the desktop app with:
 
 ```bash
 python -m src.ui.agent_ui
@@ -99,34 +90,22 @@ python -m src.ui.agent_ui
 
 ## Typical usage
 
-1. Launch the app.
-2. Select or let the app detect a compatible Ollama model.
-3. Use the chat interface to ask the orchestrator to read, write, analyze, or create files.
-4. The master orchestrator delegates specialized work to sub-agents.
-5. Generated outputs and logs are kept in the session workspace for safe isolation.
+1. Start Ollama and make sure a compatible local model is available.
+2. Launch Agent Robert and choose a model from the model selector.
+3. Use the chat interface to describe the task. The master orchestrator delegates work to specialized sub-agents as needed.
+4. Attach reference files with **Read File**, or ask the agents to work with files in the configured search space.
+5. Find generated outputs and task artifacts in the session workspace shown in the application.
 
-## Security and sandboxing
+## Workspace and data
 
-The application enforces a local workspace sandbox and includes approval checks for network-sensitive operations such as:
+At startup, the app creates a session-specific directory beneath `workspace/` and sets it as `AGENT_WORKSPACE`. Relative file writes are directed to this workspace. The application startup directory is also available for supported read and search operations through `APP_START_DIR`.
 
-- `git clone`
-- `git pull`
-- `git push`
-- SSH commands
-- communication actions that require external credentials
+Sub-agents can create execution logs in the workspace. Communication credentials are stored locally under `config/credentials.md` when configured. Keep credentials private and do not commit them to version control.
 
-This protects the system from unintended network access and ensures local work remains contained to the project workspace unless explicitly approved.
+## Security and external services
 
-## Notes
-
-- The project is designed for local experimentation and advanced agent workflows.
-- Some features depend on optional libraries and external tools that may need to be installed on the host machine.
-- Communication integrations are intentionally guarded by credential checks and authorization rules.
+Agent Robert is intended to run with local LLMs, but optional integrations can access external services. The application includes approval checks for selected network-sensitive operations such as Git pull/push/clone and SSH, and credential checks for communication features. Review tool actions and credentials carefully before enabling integrations. Local execution and workspace isolation do not make arbitrary generated code risk-free; only run tasks and scripts you trust.
 
 ## License
 
-This project is distributed under the MIT License. See the `LICENSE` file for details.
-
-## Project status
-
-This repository is a research/developer workspace for a local multi-agent coding and document assistant. It is best suited for environments where a local model runtime, Python tooling, and sandboxed execution are available.
+This project is distributed under the MIT License. See [`LICENSE`](LICENSE) for details.
