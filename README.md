@@ -1,47 +1,33 @@
 # Agent Robert
 
-**Agent Robert is your configurable, user-friendly AI personal assistant and multi-agent orchestration system, powered by local large language models (LLMs).** It uses Ollama to run models on your computer and coordinates specialized AI sub-agents to help with coding, documents, research, and everyday digital tasks. You can interact with it through its desktop chat interface, and—with email or Telegram configured—you can also contact your assistant through those channels.
+A local-first, multi-agent desktop assistant for running AI workflows on your own machine with Ollama.
 
-## Your personal assistant
+Agent Robert is a configurable personal assistant and orchestration system that uses local large language models, agent delegation, and desktop automation to help with reading, writing, planning, debugging, and file workflows without depending on a hosted LLM API for the core experience.
 
-Agent Robert is designed to be approachable and configurable: choose a local model, set up the communication integrations you want to use, and work with the assistant through a straightforward desktop interface. When enabled and configured, it can receive email and Telegram messages and return responses through those channels. WhatsApp integration is also available as an optional capability.
+## Why this project matters
 
-### Agent in action
-The snapshot shows the orchestrator delegating a writing request to a specialized document agent, which creates a Word document and returns the result to Agent Robert.
-<img width="2126" height="2046" alt="image" src="https://github.com/user-attachments/assets/533275d8-e068-47d4-8869-925651fec01f" />
+- Local-first AI: keep your data on-device and control model choice
+- Multi-agent orchestration: a master orchestrator delegates tasks to specialized agents
+- Desktop workflow: built for interactive work with files, documents, and code
+- Flexible integrations: email, Telegram, and optional external tooling with approval checks
+- Workspaces and guardrails: generated outputs and network-sensitive actions are isolated and reviewed
 
-## Overview
-
-Agent Robert combines:
-
-- A master AI orchestrator that plans work and delegates tasks to specialized sub-agents
-- Local LLM inference through Ollama, with model selection in the desktop app
-- A user-friendly chat-style desktop interface and live visualization of agents and tools
-- Configurable email and Telegram access, plus optional WhatsApp integration
-- An isolated workspace for generated files and task outputs
-- Document reading, creation, and analysis tools
-- Code mapping, verification, execution, and debugging tools
-- Git, SSH, and filesystem tools, with approval checks for network-sensitive operations
-
-The project is primarily implemented in Python. Its orchestration engine uses LangChain's Ollama integration; it does not require a hosted LLM API for its core model inference.
-
-## Main capabilities
+## Highlights
 
 - Multi-agent orchestration and task delegation
-- Local workspace/session isolation with `AGENT_WORKSPACE` and `APP_START_DIR`
-- Reading PDFs, Word documents, CSV, markdown, code files, presentations, spreadsheets, and image metadata
-- Writing documents and other generated files into the workspace
-- Code mapping and Python AST/compile verification
-- Python and other supported script execution and debugging tools
-- Git workflows and SSH commands subject to network approval
-- Skill discovery from `skills/` directories and retrieval-augmented generation (RAG) indexing
-- Communication credential configuration and email/Telegram message handling
+- Local LLM inference through Ollama
+- Desktop UI for chat, session work, and tool visibility
+- File reading, writing, and document generation
+- Code comprehension, verification, execution, and debugging
+- Git and SSH workflows with approval checks for network-sensitive actions
+- Optional communication integrations for email and Telegram
 
 ## Repository layout
 
 ```text
 .
 ├── LICENSE
+├── README.md
 ├── src/
 │   ├── core/
 │   │   └── document_engine.py
@@ -55,16 +41,16 @@ The project is primarily implemented in Python. Its orchestration engine uses La
 │   │   └── vcs_network_tools.py
 │   └── ui/
 │       └── agent_ui.py
-└── README.md
+└── workspace/
 ```
 
 ## Technology stack
 
-- Python 3
+- Python 3.10+
 - Tkinter desktop UI
 - Ollama for local model serving
 - LangChain and LangChain Ollama integration
-- Supporting libraries including `markdown`, `python-docx`, `pypdf`, `tkhtmlview`, `Pillow`, `pandas`, and `python-pptx`
+- Libraries including `markdown`, `python-docx`, `pypdf`, `tkhtmlview`, `Pillow`, `pandas`, and `python-pptx`
 
 ## Getting started
 
@@ -72,17 +58,17 @@ The project is primarily implemented in Python. Its orchestration engine uses La
 
 - Python 3.10 or later
 - Ollama installed and running locally
-- A model available in Ollama that supports tool calling; the application defaults to `gemma4:31b`
+- A model available in Ollama that supports tool calling; the app defaults to `gemma4:31b`
 
 ### Install dependencies
 
-Install the Python packages used by the application and its optional document features:
+Install the Python packages used by the application and optional document features:
 
 ```bash
 pip install markdown tkhtmlview python-docx pypdf langchain langchain-ollama pillow pandas python-pptx
 ```
 
-Install and start Ollama using its platform-specific instructions. Then pull a model if it is not already available:
+Install and start Ollama using the official instructions for your platform. Then pull the model if it is not already available:
 
 ```bash
 ollama pull gemma4:31b
@@ -90,7 +76,7 @@ ollama pull gemma4:31b
 
 ### Run the application
 
-From the repository root, launch the desktop app with:
+From the repository root:
 
 ```bash
 python -m src.ui.agent_ui
@@ -98,23 +84,39 @@ python -m src.ui.agent_ui
 
 ## Typical usage
 
-1. Start Ollama and make sure a compatible local model is available.
-2. Launch Agent Robert and choose a model from the model selector.
-3. Use the chat interface to ask the assistant for help. The master orchestrator delegates specialized work to sub-agents as needed.
-4. Optionally configure email or Telegram credentials in the app to contact the assistant through those channels. Enable the corresponding client when you want to use it.
-5. Attach reference files with **Read File**, or ask the agents to work with files in the configured search space.
-6. Find generated outputs and task artifacts in the session workspace shown in the application.
+1. Start Ollama and confirm a compatible local model is available.
+2. Launch Agent Robert and choose a model from the application model selector.
+3. Use the chat interface to ask the assistant to perform tasks.
+4. Let the master orchestrator delegate specialized work to sub-agents as needed.
+5. Attach files or ask the assistant to work within the configured search space.
+6. Review generated outputs and task artifacts in the session workspace shown in the app.
 
 ## Workspace and data
 
-At startup, the app creates a session-specific directory beneath `workspace/` and sets it as `AGENT_WORKSPACE`. Relative file writes are directed to this workspace. The application startup directory is also available for supported read and search operations through `APP_START_DIR`.
+At startup, the app creates a session-specific directory beneath `workspace/` and configures it as `AGENT_WORKSPACE`. Relative file writes are directed there. Generated execution logs, outputs, and artifacts remain in the workspace so the working area stays isolated and organized.
 
-Sub-agents can create execution logs in the workspace. Communication credentials are stored locally under `config/credentials.md` when configured. Keep credentials private and do not commit them to version control.
+The application may also create local configuration files for credentials under `config/`, and those values should remain private and not be committed to source control.
 
 ## Security and external services
 
-Agent Robert is intended to run with local LLMs, but optional communication integrations and network tools can access external services. Email and Telegram require appropriate configuration and credentials; the application includes credential checks and authorization controls. Selected network-sensitive operations, such as Git pull/push/clone and SSH, require approval. Review tool actions and credentials carefully before enabling integrations. Local execution and workspace isolation do not make arbitrary generated code risk-free; only run tasks and scripts you trust.
+This project is designed to run with local LLMs, but optional communication integrations and network tools may connect to external services. Review permissions carefully, keep secrets out of version control, and treat any network operation as an explicit trust boundary.
 
 ## License
 
-This project is distributed under the MIT License. See [`LICENSE`](LICENSE) for details.
+This project is distributed under the Apache License 2.0. See [LICENSE](LICENSE) for details.
+
+## Contributing
+
+Contributions are welcome. If you have ideas, bug fixes, or feature improvements, please open an issue or submit a pull request with a clear description of the change.
+
+## Suggested GitHub topics
+
+Use these in the repository’s “About” section for better discoverability:
+
+```text
+local-ai ollama multi-agent python desktop-assistant ai-agent assistant automation llm
+```
+
+## Project overview
+
+Agent Robert is intended as a personal AI workspace that helps with document work, coding, planning, debugging, and tool-backed task execution while staying local-first and user-controlled.
