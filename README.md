@@ -9,6 +9,7 @@ Agent Robert is designed to be approachable and configurable: choose a local mod
 ### Agent in action
 
 ![Agent Robert coordinating a delegated document-generation task](docs/agent-robert-snapshot.svg)
+<img width="2126" height="2046" alt="image" src="https://github.com/user-attachments/assets/533275d8-e068-47d4-8869-925651fec01f" />
 
 The snapshot shows the orchestrator delegating a writing request to a specialized document agent, which creates a Word document and returns the result to Agent Robert.
 
