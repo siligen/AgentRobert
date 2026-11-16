@@ -4,6 +4,16 @@ A local-first, multi-agent desktop assistant for running AI workflows on your ow
 
 Agent Robert is a configurable personal assistant and orchestration system that uses local large language models, agent delegation, and desktop automation to help with reading, writing, planning, debugging, and file workflows without depending on a hosted LLM API for the core experience.
 
+## Your personal assistant
+
+Agent Robert is designed to be approachable and configurable: choose a local model, set up the communication integrations you want to use, and work with the assistant through a straightforward desktop interface.
+
+### Agent in action
+
+The snapshot shows the orchestrator delegating a writing request to a specialized document agent, which creates a Word document and returns the result to Agent Robert.
+
+<img width="2126" height="2046" alt="Agent Robert orchestrating a document-writing task" src="https://github.com/user-attachments/assets/533275d8-e068-47d4-8869-925651fec01f" />
+
 ## Why this project matters
 
 - Local-first AI: keep your data on-device and control model choice
